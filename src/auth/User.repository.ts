@@ -1,13 +1,13 @@
 import {
   ConflictException,
   InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { AuthCredentialsDto } from './auth-credentials.dto';
 import { UserEntity } from './User.entity';
 import * as bcrypt from 'bcrypt';
+import { USERNAME_EXISTS } from 'src/constants/errors';
+import { ER_DUP_ENTRY } from 'src/constants/values';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -20,8 +20,8 @@ export class UserRepository extends Repository<UserEntity> {
       user.salt = salt;
       await user.save();
     } catch (err) {
-      if (err.code === 'ER_DUP_ENTRY') {
-        throw new ConflictException('Username exists');
+      if (err.code === ER_DUP_ENTRY) {
+        throw new ConflictException(USERNAME_EXISTS);
       }
       // @todo add logger
       throw new InternalServerErrorException();

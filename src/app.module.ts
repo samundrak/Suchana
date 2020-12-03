@@ -6,9 +6,10 @@ import { NotificationsController } from './notifications/notifications.controlle
 import { NotificationsModule } from './notifications/notifications.module';
 import { ContactModesModule } from './contact-modes/contact-modes.module';
 import { NotificationTrackersModule } from './notification-trackers/notification-trackers.module';
-import { UsersController } from './users/users.controller';
 import { AudienceModule } from './audience/audience.module';
 import { AuthModule } from './auth/auth.module';
+import { AppsModule } from './apps/apps.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -27,8 +28,10 @@ import { AuthModule } from './auth/auth.module';
     NotificationTrackersModule,
     AudienceModule,
     AuthModule,
+    AppsModule,
+    UsersModule,
   ],
-  controllers: [AppController, NotificationsController, UsersController],
+  controllers: [AppController, NotificationsController],
   providers: [AppService],
 })
 export class AppModule {}

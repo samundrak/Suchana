@@ -15,7 +15,7 @@ import { JWTStrategy } from './JWTStrategy';
     JwtModule.register({
       secret: 'secretfornow',
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: 3600 * 60 * 60,
       },
     }),
     TypeOrmModule.forFeature([UserRepository]),
