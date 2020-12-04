@@ -1,5 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { App } from 'src/apps/entities/app.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -26,6 +34,10 @@ export class UserEntity extends BaseEntity {
 
   @Column()
   salt: string;
+
+  @ManyToMany(() => App)
+  @JoinTable()
+  apps: App[];
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

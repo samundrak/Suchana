@@ -8,6 +8,7 @@ import { UserEntity } from './User.entity';
 import * as bcrypt from 'bcrypt';
 import { USERNAME_EXISTS } from 'src/constants/errors';
 import { ER_DUP_ENTRY } from 'src/constants/values';
+import { App } from 'src/apps/entities/app.entity';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -45,5 +46,13 @@ export class UserRepository extends Repository<UserEntity> {
         username: user.username,
       };
     }
+  }
+
+  async addApps(userId: number, app: App[]) {
+    const user = await this.findOne({
+      id: userId,
+    });
+    user.apps = app;
+    await user.save();
   }
 }

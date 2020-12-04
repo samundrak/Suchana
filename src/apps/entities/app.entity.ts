@@ -1,10 +1,20 @@
-import { BaseEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from 'src/auth/User.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
+@Entity()
 export class App extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   name: string;
 
   @Column()
@@ -15,6 +25,7 @@ export class App extends BaseEntity {
 
   @Column({
     type: 'bool',
+    default: true,
   })
   is_active: boolean;
 }
