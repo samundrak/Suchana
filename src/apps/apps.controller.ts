@@ -46,12 +46,12 @@ export class AppsController {
 
   @Get()
   findAll(@GetUser() user: UserEntity) {
-    return this.appsService.findAll();
+    return this.appsService.findAll(user);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.appsService.findOne(+id);
+    return this.appsService.findOne(id);
   }
 
   @Put(':id')
@@ -61,6 +61,6 @@ export class AppsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.appsService.remove(+id);
+    return this.appsService.remove(id);
   }
 }

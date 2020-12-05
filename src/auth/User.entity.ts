@@ -29,10 +29,14 @@ export class UserEntity extends BaseEntity {
   })
   username: string;
 
-  @Column()
+  @Column({
+    select: false,
+  })
   password: string;
 
-  @Column()
+  @Column({
+    select: false,
+  })
   salt: string;
 
   @ManyToMany(() => App)

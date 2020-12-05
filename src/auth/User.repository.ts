@@ -36,10 +36,14 @@ export class UserRepository extends Repository<UserEntity> {
     authCredentialsDto: AuthCredentialsDto,
   ): Promise<Pick<UserEntity, 'id' | 'username'>> {
     const { username, password } = authCredentialsDto;
-    const user = await this.findOne({
-      username,
-    });
-
+    const user = await this.findOne(
+      {
+        username,
+      },
+      {
+        select: ['password', 'id', 'username', 'salt'],
+      },
+    );
     if (user && (await user.validatePassword(password))) {
       return {
         id: user.id,
