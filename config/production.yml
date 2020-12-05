@@ -1,0 +1,7 @@
+db:
+  synchronize: false
+jwt:
+  session:
+    secret: 'productionSecret'
+  apps:
+    secret: 'productionAppSecret'

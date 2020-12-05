@@ -1,0 +1,16 @@
+server:
+  port: 3001
+db:
+  type: 'mysql'
+  port: 6603
+  username: 'root'
+  password: 'helloworld'
+  database: 'notifications_saas'
+  host: 'localhost'
+jwt:
+  session:
+    expiresIn: 36000
+    secret: 'developmentSecret'
+  apps:
+    expiresIn: 360000
+    secret: 'developmentSecret'

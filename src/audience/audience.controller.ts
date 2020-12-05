@@ -1,15 +1,32 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  UseGuards,
+} from '@nestjs/common';
+import { OnlyAppsGuard } from 'src/guards/OnlyAppsGuard';
 import { AudienceService } from './audience.service';
 import { CreateAudienceDto } from './dto/create-audience.dto';
 import { UpdateAudienceDto } from './dto/update-audience.dto';
 
-@Controller('audience')
+@Controller('apps/:appId/audiences')
+@UseGuards(OnlyAppsGuard)
 export class AudienceController {
   constructor(private readonly audienceService: AudienceService) {}
 
   @Post()
-  create(@Body() createAudienceDto: CreateAudienceDto) {
-    return this.audienceService.create(createAudienceDto);
+  @UsePipes(ValidationPipe)
+  create(
+    @Body() createAudienceDto: CreateAudienceDto,
+    @Param('appId') appId: string,
+  ) {
+    return this.audienceService.create(appId, createAudienceDto);
   }
 
   @Get()
@@ -23,7 +40,10 @@ export class AudienceController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateAudienceDto: UpdateAudienceDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAudienceDto: UpdateAudienceDto,
+  ) {
     return this.audienceService.update(+id, updateAudienceDto);
   }
 

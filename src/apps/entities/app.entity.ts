@@ -1,14 +1,15 @@
-import { UserEntity } from 'src/auth/User.entity';
+import { Audience } from 'src/audience/entities/audience.entity';
+import { RecordChanges } from 'src/entities/RecordChanges.entity';
 import {
-  BaseEntity,
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
-export class App extends BaseEntity {
+export class App extends RecordChanges {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,4 +29,8 @@ export class App extends BaseEntity {
     default: true,
   })
   is_active: boolean;
+
+  @ManyToMany(() => Audience)
+  @JoinTable()
+  audiences: Audience[];
 }
