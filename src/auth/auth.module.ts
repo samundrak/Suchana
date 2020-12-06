@@ -6,8 +6,12 @@ import { AuthService } from './auth.service';
 import { UserRepository } from './User.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JWTStrategy } from './JWTStrategy';
-import { jwtSessionConfig } from 'src/utils/configs';
+import { jwtAppsConfig, jwtSessionConfig } from 'src/utils/configs';
 import { JWT_EXPIRES_IN, JWT_STRATEGY, SECRET } from 'src/constants/values';
+import { AppAuthStrategy } from './AppAuthStrategy';
+import { AppModule } from 'src/app.module';
+import { AppRepository } from 'src/apps/repository/app.repository';
+import { AppsModule } from 'src/apps/apps.module';
 
 @Module({
   imports: [
@@ -21,9 +25,10 @@ import { JWT_EXPIRES_IN, JWT_STRATEGY, SECRET } from 'src/constants/values';
       },
     }),
     TypeOrmModule.forFeature([UserRepository]),
+    AppsModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JWTStrategy],
-  exports: [JWTStrategy, PassportModule],
+  providers: [AuthService, JWTStrategy, AppRepository, AppAuthStrategy],
+  exports: [JWTStrategy, PassportModule, AppAuthStrategy],
 })
 export class AuthModule {}

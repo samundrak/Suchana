@@ -9,12 +9,15 @@ import { App } from './entities/app.entity';
 import { AppRepository } from './repository/app.repository';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
+import { UserRepository } from 'src/auth/User.repository';
 
 @Injectable()
 export class AppsService {
   constructor(
     @InjectRepository(AppRepository)
     private appRepository: AppRepository,
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
     @InjectConnection()
     private connection: Connection,
     private jwtService: JwtService,
@@ -26,6 +29,9 @@ export class AppsService {
    * @param user
    */
   async create(createAppDto: CreateAppDto, user: UserEntity) {
+    const userWithApps = await this.userRepository.findOne(user.id, {
+      relations: ['apps'],
+    });
     const app = new App();
     app.name = createAppDto.name;
     app.key = uuid();
@@ -34,9 +40,8 @@ export class AppsService {
       key: app.key,
     });
     app.secret = accessToken;
-
     await this.connection.manager.save(app);
-    user.apps = [app];
+    user.apps = userWithApps.apps.concat([app]);
     return await this.connection.manager.save(user);
   }
 

@@ -10,13 +10,15 @@ import {
   ValidationPipe,
   UseGuards,
 } from '@nestjs/common';
-import { OnlyAppsGuard } from 'src/guards/OnlyAppsGuard';
+import { AuthGuard } from '@nestjs/passport';
+import { App } from 'src/apps/entities/app.entity';
+import { GetApp } from 'src/apps/get-app.decorator';
 import { AudienceService } from './audience.service';
 import { CreateAudienceDto } from './dto/create-audience.dto';
 import { UpdateAudienceDto } from './dto/update-audience.dto';
 
-@Controller('apps/:appId/audiences')
-@UseGuards(OnlyAppsGuard)
+@Controller('/audiences')
+@UseGuards(AuthGuard('app'))
 export class AudienceController {
   constructor(private readonly audienceService: AudienceService) {}
 
@@ -25,13 +27,14 @@ export class AudienceController {
   create(
     @Body() createAudienceDto: CreateAudienceDto,
     @Param('appId') appId: string,
+    @GetApp() app: App,
   ) {
-    return this.audienceService.create(appId, createAudienceDto);
+    return this.audienceService.create(app, createAudienceDto);
   }
 
   @Get()
-  findAll() {
-    return this.audienceService.findAll();
+  findAll(@GetApp() app: App) {
+    return this.audienceService.findAll(app);
   }
 
   @Get(':id')

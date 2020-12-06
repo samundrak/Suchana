@@ -11,6 +11,7 @@ import {
   UseGuards,
   ConflictException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
@@ -24,6 +25,7 @@ import { UpdateAppDto } from './dto/update-app.dto';
 @Controller('apps')
 @UseGuards(AuthGuard())
 export class AppsController {
+  private logger = new Logger('apps.controller');
   constructor(private readonly appsService: AppsService) {}
 
   @Post()
@@ -40,6 +42,7 @@ export class AppsController {
       if (err.code === ER_DUP_ENTRY) {
         throw new ConflictException();
       }
+      this.logger.error(err.message);
       throw new InternalServerErrorException();
     }
   }

@@ -13,4 +13,4 @@ jwt:
     secret: 'developmentSecret'
   apps:
     expiresIn: 360000
-    secret: 'developmentSecret'
+    secret: 'developmentappSecret'

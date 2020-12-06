@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppsService } from './apps.service';
 import { AppsController } from './apps.controller';
-import { PassportModule } from '@nestjs/passport';
+import { AuthGuard, PassportModule } from '@nestjs/passport';
 import { AppRepository } from './repository/app.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from 'src/auth/User.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { AudienceRepository } from 'src/audience/repository/audience.repository';
+import { jwtAppsConfig } from 'src/utils/configs';
+import { JWT_EXPIRES_IN, JWT_STRATEGY, SECRET } from 'src/constants/values';
 
 @Module({
   imports: [
@@ -19,9 +21,9 @@ import { AudienceRepository } from 'src/audience/repository/audience.repository'
       AudienceRepository,
     ]),
     JwtModule.register({
-      secret: 'secretfornow',
+      secret: jwtAppsConfig(SECRET),
       signOptions: {
-        expiresIn: 3600 * 60 * 60,
+        expiresIn: jwtAppsConfig(JWT_EXPIRES_IN),
       },
     }),
   ],

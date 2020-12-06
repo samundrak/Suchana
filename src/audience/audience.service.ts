@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
+import { App } from 'src/apps/entities/app.entity';
 import { AppRepository } from 'src/apps/repository/app.repository';
 import { Connection } from 'typeorm';
 import { CreateAudienceDto } from './dto/create-audience.dto';
 import { UpdateAudienceDto } from './dto/update-audience.dto';
+import { Audience } from './entities/audience.entity';
 import { AudienceRepository } from './repository/audience.repository';
 
 @Injectable()
@@ -16,14 +18,22 @@ export class AudienceService {
     @InjectConnection()
     private connection: Connection,
   ) {}
-  async create(appId: string, createAudienceDto: CreateAudienceDto) {
-    const app = await this.appRepository.findOne({ where: { key: appId } });
-    console.log(app);
-    return 'This action adds a new audience';
+  async create(app: App, createAudienceDto: CreateAudienceDto) {
+    const audiences = createAudienceDto.tokens
+      .map(token => {
+        const audience = new Audience();
+        audience.token = token;
+        return audience;
+      })
+      .concat(app.audiences);
+    await this.connection.manager.save(audiences);
+    app.audiences = audiences;
+    const appsWithAudiences = await this.connection.manager.save(app);
+    return appsWithAudiences.audiences;
   }
 
-  findAll() {
-    return `This action returns all audience`;
+  async findAll(app: App) {
+    return await app.audiences;
   }
 
   findOne(id: number) {

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -19,7 +19,9 @@ import {
   DB_PORT,
   DB_TYPE,
   DB_USERNAME,
+  JWT_STRATEGY,
 } from './constants/values';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [

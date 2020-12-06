@@ -30,7 +30,13 @@ export class App extends RecordChanges {
   })
   is_active: boolean;
 
-  @ManyToMany(() => Audience)
+  @ManyToMany(
+    () => Audience,
+    audience => audience.apps,
+    {
+      eager: true,
+    },
+  )
   @JoinTable()
   audiences: Audience[];
 }

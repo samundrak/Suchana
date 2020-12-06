@@ -1,8 +1,12 @@
-import { IsAlphanumeric, MaxLength, MinLength } from 'class-validator';
+import { ArrayNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class CreateAudienceDto {
-  @IsAlphanumeric()
-  @MinLength(3)
-  @MaxLength(50)
-  token: string;
+  @MaxLength(50, {
+    each: true,
+  })
+  @MinLength(3, {
+    each: true,
+  })
+  @ArrayNotEmpty()
+  tokens: string[];
 }

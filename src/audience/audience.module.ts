@@ -5,22 +5,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppRepository } from 'src/apps/repository/app.repository';
 import { AudienceRepository } from './repository/audience.repository';
 import { PassportModule } from '@nestjs/passport';
+import { AppAuthStrategy } from 'src/auth/AppAuthStrategy';
 import { JwtModule } from '@nestjs/jwt';
+import { jwtAppsConfig, jwtSessionConfig } from 'src/utils/configs';
+import { JWT_EXPIRES_IN, JWT_STRATEGY } from 'src/constants/values';
 
 @Module({
   imports: [
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-    }),
     JwtModule.register({
-      secret: 'secretfornow',
+      secret: jwtSessionConfig(JWT_STRATEGY),
       signOptions: {
-        expiresIn: 3600 * 60 * 60,
+        expiresIn: jwtSessionConfig(JWT_EXPIRES_IN),
       },
     }),
     TypeOrmModule.forFeature([AppRepository, AudienceRepository]),
   ],
   controllers: [AudienceController],
-  providers: [AudienceService],
+  providers: [AudienceService, AppAuthStrategy],
 })
 export class AudienceModule {}

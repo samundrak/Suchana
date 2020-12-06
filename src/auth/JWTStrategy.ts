@@ -9,7 +9,7 @@ import { UserEntity } from './User.entity';
 import { UserRepository } from './User.repository';
 
 @Injectable()
-export class JWTStrategy extends PassportStrategy(Strategy) {
+export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,

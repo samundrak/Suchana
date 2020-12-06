@@ -1,13 +1,20 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class OnlyAppsGuard implements CanActivate {
-  // constructor(private jwtService: JW){}
+  constructor(private jwtService: JwtService) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    console.log(context);
-    return true;
+    const req = context.switchToHttp().getRequest();
+    console.log(req.headers);
+    throw new UnauthorizedException();
   }
 }
