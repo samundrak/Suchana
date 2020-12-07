@@ -1,3 +1,4 @@
+import { Notification } from 'src/notification/entities/notification.entity';
 import { App } from 'src/apps/entities/app.entity';
 import { AudienceChannel } from 'src/audience-channel/entities/audience-channel.entity';
 import { RecordChanges } from 'src/entities/RecordChanges.entity';
@@ -5,6 +6,7 @@ import {
   Column,
   Entity,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -28,4 +30,10 @@ export class Audience extends RecordChanges {
     channel => channel.audience,
   )
   audienceToChannels: AudienceChannel[];
+
+  @ManyToMany(
+    () => Notification,
+    notification => notification.audiences,
+  )
+  notifications: Notification[];
 }

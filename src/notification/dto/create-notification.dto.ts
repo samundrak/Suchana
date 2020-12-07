@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsEnum, isNotEmpty, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsEnum, IsNotEmpty } from 'class-validator';
 import { NotificationTypeEnum } from 'src/enums/NotificationTypeEnum';
 
-export class CreateNotificationDTO {
+export class CreateNotificationDto {
   @IsNotEmpty()
-  user: string[];
-
-  @IsString()
   message: string;
+
+  @ArrayNotEmpty()
+  audiences: string[];
 
   @IsEnum(NotificationTypeEnum)
   type: NotificationTypeEnum;

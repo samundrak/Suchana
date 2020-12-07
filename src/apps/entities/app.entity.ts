@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Notification } from 'src/notification/entities/notification.entity';
 
 @Entity()
 export class App extends RecordChanges {
@@ -44,5 +45,11 @@ export class App extends RecordChanges {
     () => AudienceChannel,
     audienceChannel => audienceChannel.app,
   )
-  audienceChannels: AudienceChannel;
+  audienceChannels: AudienceChannel[];
+
+  @OneToMany(
+    () => Notification,
+    notification => notification.app,
+  )
+  notifications: Notification[];
 }
