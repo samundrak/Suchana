@@ -24,11 +24,7 @@ export class AudienceController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  create(
-    @Body() createAudienceDto: CreateAudienceDto,
-    @Param('appId') appId: string,
-    @GetApp() app: App,
-  ) {
+  create(@Body() createAudienceDto: CreateAudienceDto, @GetApp() app: App) {
     return this.audienceService.create(app, createAudienceDto);
   }
 

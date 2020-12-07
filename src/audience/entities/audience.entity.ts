@@ -1,7 +1,5 @@
 import { App } from 'src/apps/entities/app.entity';
-import { AudienceContactMode } from 'src/contact-modes/entities/audience-contact-mode.entity';
-import { ContactModes } from 'src/contact-modes/entities/contact-modes.entity';
-import { ContactModesEnum } from 'src/contact-modes/enums/ContactModesEnum';
+import { AudienceChannel } from 'src/audience-channel/entities/audience-channel.entity';
 import { RecordChanges } from 'src/entities/RecordChanges.entity';
 import {
   Column,
@@ -26,8 +24,8 @@ export class Audience extends RecordChanges {
   apps: App[];
 
   @OneToMany(
-    () => AudienceContactMode,
-    contactMode => contactMode.audience,
+    () => AudienceChannel,
+    channel => channel.audience,
   )
-  audienceToContactModes: AudienceContactMode[];
+  audienceToChannels: AudienceChannel[];
 }

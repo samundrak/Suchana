@@ -1,4 +1,4 @@
-export enum ContactModesEnum {
+export enum ChannelsEnum {
   SMS = 'SMS',
   EMAIL = 'EMAIL',
   WEB_PUSH_NOTIFICATION = 'WEB_PUSH_NOTIFICATION',

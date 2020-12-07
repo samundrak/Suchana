@@ -1,3 +1,4 @@
+import { AudienceChannel } from 'src/audience-channel/entities/audience-channel.entity';
 import { Audience } from 'src/audience/entities/audience.entity';
 import { RecordChanges } from 'src/entities/RecordChanges.entity';
 import {
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -33,10 +35,14 @@ export class App extends RecordChanges {
   @ManyToMany(
     () => Audience,
     audience => audience.apps,
-    {
-      eager: true,
-    },
+    {},
   )
   @JoinTable()
   audiences: Audience[];
+
+  @OneToMany(
+    () => AudienceChannel,
+    audienceChannel => audienceChannel.app,
+  )
+  audienceChannels: AudienceChannel;
 }

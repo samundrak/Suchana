@@ -13,19 +13,20 @@ export class AudienceService {
   constructor(
     @InjectRepository(AppRepository)
     private appRepository: AppRepository,
-    @InjectRepository(AudienceRepository)
-    private audienceRepository: AudienceRepository,
     @InjectConnection()
     private connection: Connection,
   ) {}
   async create(app: App, createAudienceDto: CreateAudienceDto) {
+    const appWithAudiences = await this.appRepository.findOne(app.id, {
+      relations: ['audiences'],
+    });
     const audiences = createAudienceDto.tokens
       .map(token => {
         const audience = new Audience();
         audience.token = token;
         return audience;
       })
-      .concat(app.audiences);
+      .concat(appWithAudiences.audiences);
     await this.connection.manager.save(audiences);
     app.audiences = audiences;
     const appsWithAudiences = await this.connection.manager.save(app);
@@ -33,7 +34,10 @@ export class AudienceService {
   }
 
   async findAll(app: App) {
-    return await app.audiences;
+    const appWithAudiences = await this.appRepository.findOne(app.id, {
+      relations: ['audiences'],
+    });
+    return appWithAudiences.audiences;
   }
 
   findOne(id: number) {

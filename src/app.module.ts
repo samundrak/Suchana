@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotificationsController } from './notifications/notifications.controller';
 import { NotificationsModule } from './notifications/notifications.module';
-import { ContactModesModule } from './contact-modes/contact-modes.module';
+import { ContactModesModule } from './channel/channel.module';
 import { NotificationTrackersModule } from './notification-trackers/notification-trackers.module';
 import { AudienceModule } from './audience/audience.module';
 import { AuthModule } from './auth/auth.module';
@@ -19,9 +19,8 @@ import {
   DB_PORT,
   DB_TYPE,
   DB_USERNAME,
-  JWT_STRATEGY,
 } from './constants/values';
-import { PassportModule } from '@nestjs/passport';
+import { AudienceChannelModule } from './audience-channel/audience-channel.module';
 
 @Module({
   imports: [
@@ -43,6 +42,7 @@ import { PassportModule } from '@nestjs/passport';
     AuthModule,
     AppsModule,
     UsersModule,
+    AudienceChannelModule,
   ],
   controllers: [AppController, NotificationsController],
   providers: [AppService],
