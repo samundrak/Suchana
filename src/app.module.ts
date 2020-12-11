@@ -19,8 +19,6 @@ import {
 } from './constants/values';
 import { NotificationModule } from './modules/notification/notification.module';
 import { BullModule } from '@nestjs/bull';
-import { NEW_NOTIFICATION_CREATED } from './events/types';
-import { setQueues, BullAdapter } from 'bull-board';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { AudienceChannelModule } from './modules/audience-channel/audience-channel.module';
 import { AudienceModule } from './modules/audience/audience.module';

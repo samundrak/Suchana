@@ -16,11 +16,17 @@ import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { GetApp } from 'src/modules/apps/get-app.decorator';
 import { App } from 'src/modules/apps/entities/app.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { v4 as uuidv4 } from 'uuid';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NotificationCreatedEvent } from './events/NotificationCreatedEvent';
 
 @Controller('notifications')
 @UseGuards(AuthGuard('app'))
 export class NotificationController {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(
+    private eventEmitter: EventEmitter2,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Post()
   @UsePipes(ValidationPipe)
@@ -28,8 +34,15 @@ export class NotificationController {
     @Body() createNotificationDto: CreateNotificationDto,
     @GetApp() app: App,
   ) {
-    console.log(createNotificationDto);
-    return this.notificationService.create(createNotificationDto, app);
+    const nextNotificationId = uuidv4();
+    this.eventEmitter.emit(
+      NotificationCreatedEvent.EVENT_NAME,
+      createNotificationDto,
+    );
+    return {
+      id: nextNotificationId,
+    };
+    // return this.notificationService.create(createNotificationDto, app);
   }
 
   @Get()
