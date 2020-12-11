@@ -6,9 +6,13 @@ import * as config from 'config';
  * @param key
  * @param defaultValue
  */
-export function envOrConfig(key: string, defaultValue?: any) {
+export function envOrConfig(
+  key: string,
+  configPath: string,
+  defaultValue?: any,
+) {
   try {
-    return config.util.getEnv(key) || config.get(key);
+    return config.util.getEnv(key) || config.get(`${configPath}.${key}`);
   } catch {
     return defaultValue || null;
   }
@@ -20,22 +24,14 @@ export function onlyConfig<T>(key: string): T {
 
 export function dbConfig(key: string) {
   try {
-    return envOrConfig(key) || onlyConfig(`db.${key}`);
+    return envOrConfig(key, 'db') || onlyConfig(`db.${key}`);
   } catch {
     return onlyConfig(`db.${key}`);
   }
 }
 export function jwtSessionConfig(key: string) {
-  try {
-    return envOrConfig(key) || onlyConfig(`jwt.session.${key}`);
-  } catch {
-    return onlyConfig(`db.session.${key}`);
-  }
+  return envOrConfig(key, 'jwt.session');
 }
 export function jwtAppsConfig(key: string) {
-  try {
-    return envOrConfig(key) || onlyConfig(`jwt.apps.${key}`);
-  } catch {
-    return onlyConfig(`db.apps.${key}`);
-  }
+  return envOrConfig(key, 'jwt.apps');
 }

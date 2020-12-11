@@ -1,13 +1,12 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ContactModesModule } from './channel/channel.module';
-import { AudienceModule } from './audience/audience.module';
-import { AuthModule } from './auth/auth.module';
-import { AppsModule } from './apps/apps.module';
-import { UsersModule } from './users/users.module';
+import { ContactModesModule } from './modules/channel/channel.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { AppsModule } from './modules/apps/apps.module';
+import { UsersModule } from './modules/users/users.module';
 import { dbConfig, envOrConfig, onlyConfig } from './utils/configs';
 import {
   DB_HOST,
@@ -16,22 +15,34 @@ import {
   DB_PORT,
   DB_TYPE,
   DB_USERNAME,
+  NODE_ENV,
 } from './constants/values';
-import { AudienceChannelModule } from './audience-channel/audience-channel.module';
-import { NotificationModule } from './notification/notification.module';
+import { NotificationModule } from './modules/notification/notification.module';
+import { BullModule } from '@nestjs/bull';
+import { NEW_NOTIFICATION_CREATED } from './events/types';
+import { setQueues, BullAdapter } from 'bull-board';
+import { JobsModule } from './modules/jobs/jobs.module';
+import { AudienceChannelModule } from './modules/audience-channel/audience-channel.module';
+import { AudienceModule } from './modules/audience/audience.module';
 
 @Module({
   imports: [
     EventEmitterModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: dbConfig(DB_TYPE),
-      host: dbConfig(DB_HOST),
-      port: dbConfig(DB_PORT),
-      username: dbConfig(DB_USERNAME),
-      password: dbConfig(DB_PASSWORD),
-      database: dbConfig(DB_NAME),
-      autoLoadEntities: envOrConfig('NODE_ENV'),
+      type: envOrConfig(DB_TYPE, 'db'),
+      host: envOrConfig(DB_HOST, 'db'),
+      port: envOrConfig(DB_PORT, 'db'),
+      username: envOrConfig(DB_USERNAME, 'db'),
+      password: envOrConfig(DB_PASSWORD, 'db'),
+      database: envOrConfig(DB_NAME, 'db'),
+      autoLoadEntities: envOrConfig(NODE_ENV, 'env'),
       synchronize: onlyConfig<boolean>('db.synchronize'),
+    }),
+    BullModule.forRoot({
+      redis: {
+        host: envOrConfig(DB_HOST, 'redis'),
+        port: envOrConfig(DB_PORT, 'redis'),
+      },
     }),
     ContactModesModule,
     AudienceModule,
@@ -40,6 +51,7 @@ import { NotificationModule } from './notification/notification.module';
     UsersModule,
     AudienceChannelModule,
     NotificationModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
