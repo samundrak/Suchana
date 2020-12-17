@@ -17,7 +17,6 @@ export class JobsService {
   }
 
   async handleNotificationArrival(notificationDto: CreateNotificationDto) {
-    this.logger.log('notification arrived');
     this.notificationQueue.add(notificationDto);
   }
 }

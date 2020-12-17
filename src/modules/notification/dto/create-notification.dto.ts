@@ -10,4 +10,5 @@ export class CreateNotificationDto {
 
   @IsEnum(NotificationTypeEnum)
   type: NotificationTypeEnum;
+  id?: string;
 }

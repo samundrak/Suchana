@@ -3,10 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { App } from 'src/modules/apps/entities/app.entity';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { NotificationRepository } from './repository/notification.repository';
 import { Notification } from './entities/notification.entity';
 import { Connection } from 'typeorm';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { NotificationCreatedEvent } from './events/NotificationCreatedEvent';
 import { Audience } from '../audience/entities/audience.entity';
 
@@ -17,22 +16,22 @@ export class NotificationService {
     private connection: Connection,
   ) {}
 
-  async create(createNotificationDto: CreateNotificationDto, app: App) {
+  async create(
+    createNotificationDto: CreateNotificationDto,
+    app: { id: string },
+  ) {
     const audiences = createNotificationDto.audiences.map(audienceId => {
       const audience = new Audience();
       audience.id = (audienceId as unknown) as number;
       return audience;
     });
     const notification = new Notification();
-    notification.appId = app.id;
+    notification.id = createNotificationDto.id;
+    notification.appId = (app.id as unknown) as number;
     notification.type = createNotificationDto.type;
     notification.message = createNotificationDto.message;
     notification.audiences = audiences;
     const notificationResult = await this.connection.manager.save(notification);
-    this.eventEmitter.emit(
-      NotificationCreatedEvent.EVENT_NAME,
-      new NotificationCreatedEvent(notificationResult),
-    );
     return notificationResult;
   }
   findAll() {

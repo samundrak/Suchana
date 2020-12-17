@@ -35,10 +35,11 @@ export class NotificationController {
     @GetApp() app: App,
   ) {
     const nextNotificationId = uuidv4();
-    this.eventEmitter.emit(
-      NotificationCreatedEvent.EVENT_NAME,
-      createNotificationDto,
-    );
+    this.eventEmitter.emit(NotificationCreatedEvent.EVENT_NAME, {
+      notification: { ...createNotificationDto, id: nextNotificationId },
+      app: { id: app.id },
+    });
+    createNotificationDto.id = nextNotificationId;
     return {
       id: nextNotificationId,
     };

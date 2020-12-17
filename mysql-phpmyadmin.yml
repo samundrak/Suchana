@@ -1,6 +1,12 @@
 version: '3.2'
 
 services:
+  redis:
+    image: redis
+    container_name: queue
+    restart: always
+    ports:
+      - '9001:6379'
   db:
     image: mysql:5.7.32
     container_name: appsDB
