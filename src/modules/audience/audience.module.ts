@@ -21,6 +21,6 @@ import { JWT_EXPIRES_IN, JWT_STRATEGY } from 'src/constants/values';
     TypeOrmModule.forFeature([AppRepository, AudienceRepository]),
   ],
   controllers: [AudienceController],
-  providers: [AudienceService, AppAuthStrategy],
+  providers: [AudienceService, AppAuthStrategy, AudienceRepository],
 })
 export class AudienceModule {}

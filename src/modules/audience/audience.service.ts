@@ -2,7 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { App } from 'src/modules/apps/entities/app.entity';
 import { AppRepository } from 'src/modules/apps/repository/app.repository';
-import { Connection } from 'typeorm';
+import { Connection, In, QueryBuilder } from 'typeorm';
+import { CreateNotificationDto } from '../notification/dto/create-notification.dto';
+import { INotificationCreatedEvent } from '../notification/events/NotificationCreatedEvent';
 import { CreateAudienceDto } from './dto/create-audience.dto';
 import { UpdateAudienceDto } from './dto/update-audience.dto';
 import { Audience } from './entities/audience.entity';
@@ -15,6 +17,8 @@ export class AudienceService {
     private appRepository: AppRepository,
     @InjectConnection()
     private connection: Connection,
+    @InjectRepository(AudienceRepository)
+    private audienceRepo: AudienceRepository,
   ) {}
   async create(app: App, createAudienceDto: CreateAudienceDto) {
     const appWithAudiences = await this.appRepository.findOne(app.id, {
@@ -50,5 +54,16 @@ export class AudienceService {
 
   remove(id: number) {
     return `This action removes a #${id} audience`;
+  }
+
+  async orderByChannel(audienceList: string[]) {
+    return await this.audienceRepo
+      .createQueryBuilder('audiences')
+      .leftJoinAndSelect('audiences.audienceToChannels', 'channels')
+      .where({
+        id: In(audienceList),
+      })
+      .andWhere('channels.enabled = 1')
+      .getMany();
   }
 }
