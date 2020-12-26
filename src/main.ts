@@ -10,6 +10,7 @@ async function bootstrap() {
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
   app.setGlobalPrefix('api/v1');
   app.use('/jobs', bullBoardMiddleware);
+  console.log('henlo');
   await app.listen(config.get('server.port'));
 }
 bootstrap();

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -7,7 +7,7 @@ import { ContactModesModule } from './modules/channel/channel.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AppsModule } from './modules/apps/apps.module';
 import { UsersModule } from './modules/users/users.module';
-import { dbConfig, envOrConfig, onlyConfig } from './utils/configs';
+import { envOrConfig, onlyConfig } from './utils/configs';
 import {
   DB_HOST,
   DB_NAME,
@@ -22,6 +22,7 @@ import { BullModule } from '@nestjs/bull';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { AudienceChannelModule } from './modules/audience-channel/audience-channel.module';
 import { AudienceModule } from './modules/audience/audience.module';
+import { DestinedNotificationHandlerService } from './modules/destined-notification-handler/destined-notification-handler.service';
 
 @Module({
   imports: [
@@ -52,6 +53,6 @@ import { AudienceModule } from './modules/audience/audience.module';
     JobsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DestinedNotificationHandlerService],
 })
 export class AppModule {}
