@@ -57,7 +57,6 @@ export class AudienceService {
   }
 
   async orderByChannel(audienceList: string[]) {
-    console.log(audienceList);
     return await this.audienceRepo
       .createQueryBuilder('audiences')
       .leftJoinAndSelect('audiences.audienceToChannels', 'channels')

@@ -43,7 +43,6 @@ export class NotificationController {
     return {
       id: nextNotificationId,
     };
-    // return this.notificationService.create(createNotificationDto, app);
   }
 
   @Get()

@@ -29,7 +29,7 @@ export class NotificationService {
     notification.id = createNotificationDto.id;
     notification.appId = (app.id as unknown) as number;
     notification.type = createNotificationDto.type;
-    notification.message = createNotificationDto.message;
+    notification.message = JSON.stringify(createNotificationDto.messages);
     notification.audiences = audiences;
     const notificationResult = await this.connection.manager.save(notification);
     return notificationResult;

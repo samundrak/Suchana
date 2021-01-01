@@ -27,7 +27,6 @@ export class JobsService {
     notificationForChannelList: IDestinedNotification[],
   ) {
     notificationForChannelList.forEach(item => {
-      console.log(item);
       this.destinedNotification.add(item);
     });
   }

@@ -1,16 +1,25 @@
-import { ArrayNotEmpty, IsEnum, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsEnum,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
 import { NotificationTypeEnum } from 'src/enums/NotificationTypeEnum';
 import { ChannelsEnum } from 'src/modules/channel/enums/ChannelsEnum';
+import { NotificationMessagePayloadDTO } from './NotificationMessagePayloadDTO';
 
 export class CreateNotificationDto {
-  @IsNotEmpty()
   message: string;
+
+  @ValidateNested({ each: true })
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  @Type(() => NotificationMessagePayloadDTO)
+  messages: NotificationMessagePayloadDTO[];
 
   @ArrayNotEmpty()
   audiences: string[];
-
-  @IsEnum(ChannelsEnum, { each: true })
-  channels: ChannelsEnum[];
 
   @IsEnum(NotificationTypeEnum)
   type: NotificationTypeEnum;

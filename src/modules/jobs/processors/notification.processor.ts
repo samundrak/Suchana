@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { IDestinedNotification } from 'src/modules/audience-channel/interfaces/IDestinedNotification';
 import { AudienceService } from 'src/modules/audience/audience.service';
+import { ChannelsEnum } from 'src/modules/channel/enums/ChannelsEnum';
 import { INotificationCreatedEvent } from 'src/modules/notification/events/NotificationCreatedEvent';
 import { NotificationService } from 'src/modules/notification/notification.service';
 import { NOTIFICATION_ARRIVED_JOB } from '../jobs';
@@ -32,9 +33,12 @@ export class NotificationProcessor {
     }
   }
   @OnQueueCompleted()
-  async handleQueueCompleted(job: Job<INotificationCreatedEvent>, result: any) {
+  async handleQueueCompleted(job: Job<INotificationCreatedEvent>) {
     const audiences = await this.audienceService.orderByChannel(
       job.data.notification.audiences,
+    );
+    const allowedChannels = job.data.notification.messages.map(
+      item => item.channel,
     );
     const audienceByChannel = (audiences.flatMap(audience => {
       return (
@@ -42,12 +46,16 @@ export class NotificationProcessor {
           ...audienceChannel,
           notification: {
             id: job.data.notification.id,
-            message: job.data.notification.message,
+            message: JSON.stringify(job.data.notification.messages),
           },
           app: job.data.app,
         })) || []
       );
     }) as unknown) as IDestinedNotification[];
-    this.jobsService.handleNotificationForChannel(audienceByChannel);
+    this.jobsService.handleNotificationForChannel(
+      audienceByChannel.filter(item =>
+        allowedChannels.includes(item.channelsId as ChannelsEnum),
+      ),
+    );
   }
 }
