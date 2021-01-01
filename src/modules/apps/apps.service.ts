@@ -38,6 +38,7 @@ export class AppsService {
     const accessToken = this.jwtService.sign({
       name: createAppDto.name,
       key: app.key,
+      expiresIn: '90d',
     });
     app.secret = accessToken;
     await this.connection.manager.save(app);

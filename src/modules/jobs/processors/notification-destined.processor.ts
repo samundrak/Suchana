@@ -8,11 +8,14 @@ import { DESTINED_NOTIFICATION } from '../jobs';
 
 @Processor(DESTINED_NOTIFICATION)
 export class DestinedNotification {
-  constructor(private handler: DestinedNotificationHandlerService) {}
+  constructor(
+    private handler: DestinedNotificationHandlerService,
+    private emailHandler: EmailHandler,
+  ) {}
   @Process()
   handleDestinedNotification(job: Job<IDestinedNotification>) {
     if (job.data.channelsId === ChannelsEnum.EMAIL) {
-      this.handler.setHandler(new EmailHandler());
+      this.handler.setHandler(this.emailHandler);
     }
     this.handler.dispatch(job.data);
   }

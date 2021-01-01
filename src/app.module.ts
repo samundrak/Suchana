@@ -23,6 +23,9 @@ import { JobsModule } from './modules/jobs/jobs.module';
 import { AudienceChannelModule } from './modules/audience-channel/audience-channel.module';
 import { AudienceModule } from './modules/audience/audience.module';
 import { DestinedNotificationHandlerService } from './modules/destined-notification-handler/destined-notification-handler.service';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { EmailModule } from './modules/email/email.module';
 
 @Module({
   imports: [
@@ -43,6 +46,27 @@ import { DestinedNotificationHandlerService } from './modules/destined-notificat
         port: envOrConfig(DB_PORT, 'redis'),
       },
     }),
+    MailerModule.forRoot({
+      options: {},
+      transport: {
+        host: onlyConfig('email.host'),
+        port: onlyConfig('email.port'),
+        auth: {
+          user: onlyConfig('email.auth.user'),
+          pass: onlyConfig('email.auth.pass'),
+        },
+      },
+      defaults: {
+        from: onlyConfig('email.from'),
+      },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
     ContactModesModule,
     AudienceModule,
     AuthModule,
@@ -51,6 +75,7 @@ import { DestinedNotificationHandlerService } from './modules/destined-notificat
     AudienceChannelModule,
     NotificationModule,
     JobsModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService, DestinedNotificationHandlerService],

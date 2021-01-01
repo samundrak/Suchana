@@ -42,6 +42,7 @@ export class NotificationProcessor {
           ...audienceChannel,
           notification: {
             id: job.data.notification.id,
+            message: job.data.notification.message,
           },
           app: job.data.app,
         })) || []

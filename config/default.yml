@@ -17,3 +17,10 @@ jwt:
   apps:
     expiresIn: 360000
     secret: 'developmentappSecret'
+email:
+  from: \"Suchana\" <app@suchana.com>
+  host: smtp.ethereal.email
+  port: 587
+  auth:
+    user: alverta.king@ethereal.email
+    pass: DrMYFnk7CTUmsBchvt

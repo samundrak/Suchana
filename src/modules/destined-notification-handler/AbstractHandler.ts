@@ -3,11 +3,10 @@ import { IDestinedNotification } from '../audience-channel/interfaces/IDestinedN
 
 export abstract class AbstractHandler {
   public async execute(data: IDestinedNotification) {
-    console.log('henlo', data);
-    await this.saveInDB();
-    await this.dispatch();
+    await this.saveInDB(data);
+    await this.dispatch(data);
   }
-  private saveInDB() {
+  private saveInDB(data: IDestinedNotification) {
     // do something to save in DB
   }
 
@@ -17,5 +16,5 @@ export abstract class AbstractHandler {
    * notification so we will leave it upto the
    * handlers.
    */
-  protected abstract dispatch(): Promise<boolean>;
+  protected abstract dispatch(data: IDestinedNotification): Promise<boolean>;
 }

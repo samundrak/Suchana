@@ -35,7 +35,6 @@ export class NotificationService {
     return notificationResult;
   }
   findAll() {
-    console.log('henlo');
     return `This action returns all notification`;
   }
 
