@@ -1,4 +1,4 @@
-import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsString, MinLength } from 'class-validator';
 import { ChannelsEnum } from 'src/modules/channel/enums/ChannelsEnum';
 
 export class CreateAudienceChannelDto {
@@ -7,6 +7,5 @@ export class CreateAudienceChannelDto {
 
   @IsString()
   @MinLength(2)
-  @MaxLength(50)
   value: string;
 }
