@@ -7,6 +7,7 @@ admin.initializeApp({
   credential: admin.credential.cert(
     path.join(__dirname, '../../../../../no-push/fcm-secret.json'),
   ),
+  databaseURL: 'https://suchana-4018c-default-rtdb.firebaseio.com',
 });
 export class FirebaseCloudMessaging implements IPushNotificationProvider {
   private messaging: messaging.Messaging;
