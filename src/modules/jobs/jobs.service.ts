@@ -2,6 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Queue } from 'bull';
 import { setQueues } from 'bull-board';
+import { NotificationTypeEnum } from 'src/enums/NotificationTypeEnum';
 import { IDestinedNotification } from '../audience-channel/interfaces/IDestinedNotification';
 import { CreateNotificationDto } from '../notification/dto/create-notification.dto';
 import { NOTIFICATION_ARRIVED_JOB, DESTINED_NOTIFICATION } from './jobs';
@@ -20,7 +21,11 @@ export class JobsService {
   }
 
   async handleNotificationArrival(notificationDto: CreateNotificationDto) {
-    this.notificationQueue.add(notificationDto);
+    this.notificationQueue.add(notificationDto, {
+      // @todo add more advance priority logic
+      priority:
+        notificationDto.type === NotificationTypeEnum.URGENT ? 1 : Date.now(),
+    });
   }
 
   async handleNotificationForChannel(

@@ -7,6 +7,8 @@ import { AudienceRepository } from '../audience/repository/audience.repository';
 import { DestinedNotificationHandlerService } from '../destined-notification-handler/destined-notification-handler.service';
 import { EmailHandler } from '../destined-notification-handler/handlers/EmailHandler';
 import { PushNotificationHandler } from '../destined-notification-handler/handlers/PushNotificationHandler';
+import { NotificationLogActivityRepository } from '../destined-notification-handler/repositories/notification-log-activity.repository';
+import { NotificationLogsRepository } from '../destined-notification-handler/repositories/notification-logs.repository';
 import { NotificationService } from '../notification/notification.service';
 import { NOTIFICATION_ARRIVED_JOB, DESTINED_NOTIFICATION } from './jobs';
 import { JobsService } from './jobs.service';
@@ -21,7 +23,11 @@ import { NotificationProcessor } from './processors/notification.processor';
     BullModule.registerQueue({
       name: DESTINED_NOTIFICATION,
     }),
-    TypeOrmModule.forFeature([AudienceRepository]),
+    TypeOrmModule.forFeature([
+      AudienceRepository,
+      NotificationLogActivityRepository,
+      NotificationLogsRepository,
+    ]),
   ],
   providers: [
     JobsService,

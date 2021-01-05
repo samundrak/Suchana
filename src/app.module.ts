@@ -26,6 +26,7 @@ import { DestinedNotificationHandlerService } from './modules/destined-notificat
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { EmailModule } from './modules/email/email.module';
+import { DestinedNotificationHandlerModule } from './modules/destined-notification-handler/destined-notification-handler.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { EmailModule } from './modules/email/email.module';
     NotificationModule,
     JobsModule,
     EmailModule,
+    DestinedNotificationHandlerModule,
   ],
   controllers: [AppController],
   providers: [AppService, DestinedNotificationHandlerService],
